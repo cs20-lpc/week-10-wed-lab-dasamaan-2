@@ -31,14 +31,22 @@ int main() {
     // loop until the user quits
     do {
         cout << "Enter your option: ";
-        cin  >> userChoice;
+        cin >> userChoice;
+
+        // check if input failed
+        if (cin.fail()) {
+            cin.clear(); // clear error flag
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard bad input
+            cout << "Invalid input. Please enter a number between 1 and 6.\n";
+            continue;
+        }
+
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove leftover newline
 
         switch (userChoice) {
-            // find
-            case 1:
+            case 1: // find
                 try {
                     cout << "Enter a key to search my dictionary: ";
-                    cin.ignore();
                     getline(cin, userWord);
                     s = dict.find(userWord);
                     cout << s << endl;
@@ -48,22 +56,17 @@ int main() {
                 }
                 break;
 
-            // insert
-            case 2:
+            case 2: // insert
                 cout << "Enter the key of the new record: ";
-                cin.ignore();
                 getline(cin, userWord);
                 cout << "Enter the value of the new record: ";
                 getline(cin, s);
                 dict.insert(userWord, s);
                 break;
 
-            // remove
-            case 3:
+            case 3: // remove
                 try {
-                    cout << "Enter the key of the record to be "
-                         << "removed from my dictionary: ";
-                    cin.ignore();
+                    cout << "Enter the key of the record to be removed from my dictionary: ";
                     getline(cin, userWord);
                     dict.remove(userWord);
                 }
@@ -72,21 +75,22 @@ int main() {
                 }
                 break;
 
-            // size
-            case 4:
+            case 4: // size
                 cout << "Dictionary size is " << dict.size() << endl;
                 break;
 
-            // clear
-            case 5:
+            case 5: // clear
                 cout << "Clearing out my dictionary . . . ";
                 dict.clear();
                 cout << "cleared!\n";
                 break;
 
-            // quit
-            case 6:
+            case 6: // quit
                 flag = true;
+                break;
+
+            default:
+                cout << "Invalid choice. Enter a number between 1 and 6.\n";
                 break;
         }
     } while (!flag);

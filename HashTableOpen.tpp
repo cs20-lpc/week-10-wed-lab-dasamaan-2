@@ -1,6 +1,11 @@
 template <typename Key, typename Val>
 HashTableOpen<Key, Val>::HashTableOpen(int i) {
-    // TODO
+    M = i;
+    ht = new LinkedList<Record>*[M];
+
+    for (int j = 0; j < M; j++) {
+        ht[j] = new LinkedList<Record>();
+    }
 }
 
 template <typename Key, typename Val>
@@ -21,7 +26,10 @@ HashTableOpen<Key, Val>& HashTableOpen<Key, Val>::operator=
 
 template <typename Key, typename Val>
 HashTableOpen<Key, Val>::~HashTableOpen() {
-    // TODO
+    for (int i = 0; i < M; i++) {
+        delete ht[i];
+    }
+    delete[] ht;
 }
 
 template <typename Key, typename Val>
@@ -99,7 +107,17 @@ void HashTableOpen<Key, Val>::copy(const HashTableOpen<Key, Val>& copyObj) {
 
 template <typename Key, typename Val>
 Val HashTableOpen<Key, Val>::find(const Key& k) const {
-    // TODO
+    int index = hash(k);
+    LinkedList<Record>* list = ht[index];
+
+    for (int i = 0; i < list->getLength(); i++) {
+        Record r = list->getElement(i);
+        if (r.k == k) {
+            return r.v;
+        }
+    }
+
+    throw string("Error: key not found");
 }
 
 template <typename Key, typename Val>
@@ -152,15 +170,41 @@ int HashTableOpen<Key, Val>::hash(const Key& k) const {
 
 template <typename Key, typename Val>
 void HashTableOpen<Key, Val>::insert(const Key& k, const Val& v) {
-    // TODO
+    int index = hash(k);
+    LinkedList<Record>* list = ht[index];
+
+    Record newRec(k, v);
+
+    if (list->isEmpty()) {
+        list->append(newRec);
+    } else {
+        list->insert(0, newRec); // insert at front
+    }
 }
 
 template <typename Key, typename Val>
 void HashTableOpen<Key, Val>::remove(const Key& k) {
-    // TODO
+    int index = hash(k);
+    LinkedList<Record>* list = ht[index];
+
+    for (int i = 0; i < list->getLength(); i++) {
+        Record r = list->getElement(i);
+        if (r.k == k) {
+            list->remove(i);
+            return;
+        }
+    }
+
+    throw string("Error: key not found");
 }
 
 template <typename Key, typename Val>
 int HashTableOpen<Key, Val>::size() const {
-    // TODO
+    int total = 0;
+
+    for (int i = 0; i < M; i++) {
+        total += ht[i]->getLength();
+    }
+
+    return total;
 }
