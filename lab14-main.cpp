@@ -1,5 +1,6 @@
 #include "HashTableOpen.hpp"
 #include <string>
+#include <limits>
 
 int main() {
     // variables
